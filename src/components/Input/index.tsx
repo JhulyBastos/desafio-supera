@@ -6,7 +6,7 @@ export function Input({ ...props }: InputProps) {
   return (
     <input
       {...props}
-      className="bg-dark-10/10 w-[336px] h-[51px] p-4 rounded-lg"
+      className="bg-slate-400/10 w-[300px] h-[40px] p-4 rounded-lg placeholder:text-sm outline-none"
     />
   );
 }

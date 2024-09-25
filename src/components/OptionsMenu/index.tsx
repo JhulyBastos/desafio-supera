@@ -1,9 +1,15 @@
 "use client";
+import { useState } from "react";
 import { Button } from "../Button";
-import { useRouter } from "next/navigation";
+import RegisterModal from "../RegisterModal";
 
 export default function OptionsMenu() {
-  const router = useRouter();
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  function toggleRegisterModal() {
+    setIsRegisterModalOpen(!isRegisterModalOpen);
+  }
+
   return (
     <div>
       <div className="w-1/4 h-screen bg-white flex flex-col items-start px-4 rounded-r-2xl ">
@@ -11,15 +17,14 @@ export default function OptionsMenu() {
           C<span className="text-black/80 text-[45px]">RUD</span>
         </h1>
         <div className=" flex flex-col gap-4">
-          <Button onClick={() => router.push("/UserRegistration")}>
+          <Button onClick={toggleRegisterModal}>
             Cadastrar um novo usuário
-          </Button>
-
-          <Button onClick={() => router.push("/UserList")}>
-            Visualizar lista de usuários
           </Button>
         </div>
       </div>
+      {isRegisterModalOpen && (
+        <RegisterModal closeRegisterModal={toggleRegisterModal} />
+      )}
     </div>
   );
 }
