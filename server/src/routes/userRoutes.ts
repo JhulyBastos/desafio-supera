@@ -9,10 +9,10 @@ const router = Router();
 router.post("/", async (req: Request, res: Response) => {
   try {
     const db = await openDb();
-    const user: User = req.body;
+    const user: User = req.body.data;
     const result = await db.run(
-      "INSERT INTO users (name, email, profile, age) VALUES (?, ?, ?, ?)",
-      [user.name, user.email, user.profile, user.age]
+      "INSERT INTO users (name, email, profile, age, phone) VALUES (?, ?, ?, ?, ?)",
+      [user.name, user.email, user.profile, user.age, user.phone]
     );
     res.status(201).json({ id: result.lastID, ...user });
   } catch (error) {
@@ -34,12 +34,12 @@ router.get("/", async (req: Request, res: Response) => {
     const params: any[] = [];
 
     if (search) {
-      query += " AND (nome LIKE ? OR email LIKE ?)";
-      params.push(`%${search}%, %${search}%`);
+      query += " AND (name LIKE ? OR email LIKE ?)";
+      params.push(`%${search}%`, `%${search}%`);
     }
 
     if (perfil) {
-      query += " AND perfil = ?";
+      query += " AND profile = ?";
       params.push(perfil);
     }
 
@@ -48,17 +48,16 @@ router.get("/", async (req: Request, res: Response) => {
 
     const users = await db.all(query, params);
 
-    // Get total count for pagination
     let countQuery = "SELECT COUNT(*) as count FROM users WHERE 1=1";
     const countParams: any[] = [];
 
     if (search) {
-      countQuery += " AND (nome LIKE ? OR email LIKE ?)";
-      countParams.push(`%${search}%, %${search}%`);
+      countQuery += " AND (name LIKE ? OR email LIKE ?)";
+      countParams.push(`%${search}%`, `%${search}%`);
     }
 
     if (perfil) {
-      countQuery += " AND perfil = ?";
+      countQuery += " AND profile = ?";
       countParams.push(perfil);
     }
 
@@ -72,16 +71,18 @@ router.get("/", async (req: Request, res: Response) => {
       currentPage: page,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to get users" });
+    console.error("Erro ao buscar usuários:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
+
 router.put("/:id", async (req: Request, res: Response) => {
   try {
     const db = await openDb();
-    const user: User = req.body;
+    const user: User = req.body.data;
     const result = await db.run(
-      "UPDATE users SET nome = ?, email = ?, perfil = ?, idade = ? WHERE id = ?",
-      [user.name, user.email, user.profile, user.age, req.params.id]
+      "UPDATE users SET name = ?, email = ?, profile = ?, age = ?, phone= ? WHERE id = ?",
+      [user.name, user.email, user.profile, user.age, user.phone, req.params.id]
     );
     if (result.changes === 0) {
       res.status(404).json({ error: "User not found" });
@@ -96,9 +97,11 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const db = await openDb();
+
     const result = await db.run("DELETE FROM users WHERE id = ?", [
       req.params.id,
     ]);
+
     if (result.changes === 0) {
       res.status(404).json({ error: "User not found" });
     } else {

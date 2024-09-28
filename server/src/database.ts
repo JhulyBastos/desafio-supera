@@ -13,7 +13,8 @@ export async function openDb() {
       name TEXT NOT NULL,
       email TEXT NOT NULL,
       profile TEXT NOT NULL,
-      age INTEGER NOT NULL
+      age INTEGER NOT NULL,
+      phone TEXT NOT NULL
     )
   `);
 
