@@ -3,7 +3,11 @@ import { useState } from "react";
 import { Button } from "../Button";
 import RegisterModal from "../RegisterModal";
 
-export default function OptionsMenu() {
+interface OptionsMenuProps {
+  setIsFetching: (value: boolean) => void;
+}
+
+export default function OptionsMenu({ setIsFetching }: OptionsMenuProps) {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   function toggleRegisterModal() {
@@ -12,7 +16,7 @@ export default function OptionsMenu() {
 
   return (
     <>
-      <div className="w-1/4 h-screen bg-white flex flex-col items-start px-4 rounded-r-2xl ">
+      <div className="w-full h-screen bg-white flex flex-col items-start px-4 rounded-r-2xl ">
         <h1 className="w-full text-dark-20 font-bold text-6xl py-10 px-4">
           C<span className="text-black/80 text-[45px]">RUD</span>
         </h1>
@@ -23,7 +27,10 @@ export default function OptionsMenu() {
         </div>
       </div>
       {isRegisterModalOpen && (
-        <RegisterModal closeRegisterModal={toggleRegisterModal} />
+        <RegisterModal
+          setIsFetching={setIsFetching}
+          closeRegisterModal={toggleRegisterModal}
+        />
       )}
     </>
   );

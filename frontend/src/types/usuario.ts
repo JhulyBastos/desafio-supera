@@ -2,7 +2,7 @@ export type Usuario = {
   id?: string;
   name: string;
   email: string;
-  phone: number;
-  age: number;
+  phone: string;
+  age: string;
   profile: string;
 };

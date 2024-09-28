@@ -1,75 +1,70 @@
 "use client";
 import { Usuario } from "@/types/usuario";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import RegisterModal from "../RegisterModal";
+import RemoveUserModal from "../RemoveUserModal";
 
-function UserTable() {
-  const [users, setUsers] = useState<Usuario[]>([]);
-  const [nameEmailFilter, setNameEmailFilter] = useState("");
-  const [profileFilter, setProfileFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+interface UserTableProps {
+  users: Usuario[];
+  setIsFetching: (value: boolean) => void;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
+  currentPage: number;
+  totalPages: number;
+}
 
-  const handleNameEmailChange = (e: any) => {
-    setNameEmailFilter(e.target.value);
-    setCurrentPage(1);
-  };
+function UserTable({
+  users,
+  setIsFetching,
+  setCurrentPage,
+  currentPage,
+  totalPages,
+}: UserTableProps) {
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [selectUser, setSelectUser] = useState<Usuario | undefined>(undefined);
+  const [openRemoveModal, setOpenRemoveModal] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
 
-  const handleProfileChange = (e: any) => {
-    setProfileFilter(e.target.value);
-    setCurrentPage(1);
-  };
+  function reset() {
+    setSelectUser(undefined);
+    setReadOnly(false);
+  }
 
+  function toggleRegisterModal() {
+    setIsRegisterModalOpen(!isRegisterModalOpen);
+  }
+  function toggleRemoveModal() {
+    setOpenRemoveModal(!openRemoveModal);
+  }
+
+  function closeRemoveModal() {
+    setOpenRemoveModal(false);
+    reset();
+  }
+  function closeRegisterModal() {
+    setIsRegisterModalOpen(false);
+    reset();
+  }
   const handlePreviousPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
+    setCurrentPage((prev) => prev - 1);
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    setCurrentPage((prev) => prev + 1);
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/users", {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      })
-      .then((res) => setUsers(res.data.users));
-  }, []);
-
   return (
-    <div className="p-4 max-w-5xl mx-auto text-black">
-      <div className="mb-4 flex items-center space-x-4">
-        <input
-          type="text"
-          placeholder="Filter by name or email"
-          value={nameEmailFilter}
-          onChange={handleNameEmailChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <select
-          value={profileFilter}
-          onChange={handleProfileChange}
-          className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">All Profiles</option>
-          <option value="admin">Admin</option>
-          <option value="user">User</option>
-        </select>
-      </div>
-
+    <div className=" w-full flex flex-col p-4 mx-auto text-black">
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+        <table className="min-w-full bg-white text-center  rounded-lg">
           <thead>
             <tr className="bg-gray-100">
               <th className="py-2 px-4 border-b">ID</th>
-              <th className="py-2 px-4 border-b">Name</th>
+              <th className="py-2 px-4 border-b">Nome</th>
               <th className="py-2 px-4 border-b">Email</th>
-              <th className="py-2 px-4 border-b">Profile</th>
-              <th className="py-2 px-4 border-b">Age</th>
-              <th className="py-2 px-4 border-b">Phone</th>
-              <th className="py-2 px-4 border-b">Actions</th>
+              <th className="py-2 px-4 border-b">Perfil</th>
+              <th className="py-2 px-4 border-b">Idade</th>
+              <th className="py-2 px-4 border-b">Telefone</th>
+              <th className="py-2 px-4 border-b">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -82,11 +77,34 @@ function UserTable() {
                 <td className="py-2 px-4 border-b">{user.age}</td>
                 <td className="py-2 px-4 border-b">{user.phone}</td>
                 <td className="py-2 px-4 border-b">
-                  <button className="mr-2 px-3 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded-lg">
-                    Edit
+                  <button
+                    onClick={() => {
+                      toggleRegisterModal();
+                      setSelectUser(user);
+                    }}
+                    className="mr-2 px-3 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
+                  >
+                    Editar
                   </button>
-                  <button className="px-3 py-1 text-white bg-red-500 hover:bg-red-600 rounded-lg">
-                    Delete
+
+                  <button
+                    onClick={() => {
+                      toggleRegisterModal();
+                      setSelectUser(user);
+                      setReadOnly(true);
+                    }}
+                    className="mr-2 px-3 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded-lg"
+                  >
+                    Visualizar
+                  </button>
+                  <button
+                    onClick={() => {
+                      toggleRemoveModal();
+                      setSelectUser(user);
+                    }}
+                    className="mr-2 px-3 py-1 text-white bg-red-500 hover:bg-red-600 rounded-lg"
+                  >
+                    Deletar
                   </button>
                 </td>
               </tr>
@@ -94,7 +112,6 @@ function UserTable() {
           </tbody>
         </table>
       </div>
-
       <div className="mt-4 flex items-center justify-between">
         <button
           onClick={handlePreviousPage}
@@ -105,10 +122,10 @@ function UserTable() {
               : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
         >
-          Previous
+          Anterior
         </button>
         <span>
-          Page {currentPage} of {totalPages}
+          Página {currentPage} de {totalPages}
         </span>
         <button
           onClick={handleNextPage}
@@ -119,9 +136,26 @@ function UserTable() {
               : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
         >
-          Next
+          Próximo
         </button>
       </div>
+      {isRegisterModalOpen && (
+        <RegisterModal
+          reset={reset}
+          readOnly={readOnly}
+          setIsFetching={setIsFetching}
+          closeRegisterModal={closeRegisterModal}
+          editData={selectUser}
+        />
+      )}
+      {openRemoveModal && (
+        <RemoveUserModal
+          reset={reset}
+          id={selectUser?.id ?? ""}
+          setIsFetching={setIsFetching}
+          closeRemoveModal={closeRemoveModal}
+        />
+      )}
     </div>
   );
 }

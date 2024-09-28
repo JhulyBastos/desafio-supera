@@ -1,10 +1,14 @@
-import React from "react";
 import * as Select from "@radix-ui/react-select";
-import classnames from "classnames";
-import { ChevronDown, Check } from "lucide-react";
-import { useFormContext, Controller } from "react-hook-form";
+import { Check, ChevronDown } from "lucide-react";
+import { Controller, useFormContext } from "react-hook-form";
 
-export default function SelectProfileType() {
+interface SelectProfileTypeProps {
+  readOnly: boolean;
+}
+
+export default function SelectProfileType({
+  readOnly,
+}: SelectProfileTypeProps) {
   const { control } = useFormContext();
 
   return (
@@ -14,7 +18,11 @@ export default function SelectProfileType() {
         control={control}
         defaultValue=""
         render={({ field }) => (
-          <Select.Root value={field.value} onValueChange={field.onChange}>
+          <Select.Root
+            value={field.value}
+            onValueChange={field.onChange}
+            disabled={readOnly}
+          >
             <Select.Trigger
               className="inline-flex items-center justify-center rounded px-[15px] text-[13px] leading-none h-[35px] gap-[5px] bg-white shadow-[0_2px_10px] shadow-black/10 hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-violet9 outline-none"
               aria-label=""
