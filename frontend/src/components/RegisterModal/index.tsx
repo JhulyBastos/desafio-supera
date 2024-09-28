@@ -11,8 +11,8 @@ interface RegisterModalProps {
   closeRegisterModal: () => void;
   editData?: Usuario;
   setIsFetching: (value: boolean) => void;
-  readOnly: boolean;
-  reset: () => void;
+  readOnly?: boolean;
+  reset?: () => void;
 }
 
 export default function RegisterModal({
@@ -80,7 +80,7 @@ export default function RegisterModal({
 
     closeRegisterModal();
     setIsFetching(true);
-    reset();
+    reset && reset();
   }
 
   return (
@@ -96,7 +96,7 @@ export default function RegisterModal({
               onSubmit={metodos.handleSubmit(onSubmit)}
               className=" text-black flex flex-col gap-4"
             >
-              <RegistrationForm readOnly={readOnly} />
+              <RegistrationForm readOnly={readOnly ?? false} />
 
               <div className="flex gap-4 ">
                 {!readOnly && (

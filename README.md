@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CRUD de Usuários
 
-## Getting Started
+Este projeto é uma aplicação CRUD (Create, Read, Update, Delete) para gerenciar usuários. A aplicação permite criar, listar, editar e remover usuários, com um frontend desenvolvido em React e um backend em Node.js usando SQLite. O projeto foi desenvolvido para o desafio técnico da empresa Supera.
 
-First, run the development server:
+## Instalação
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone o repositório:**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone https://github.com/JhulyBastos/desafio-supera.git
+   cd desafio-supera
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Instale as dependências do frontend:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cd frontend
+   npm install
+   ```
 
-## Learn More
+3. **Instale as dependências do backend:**
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   cd ../server
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Execução
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Inicie o backend:**
 
-## Deploy on Vercel
+   No diretório `server`, execute o comando:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run start
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   O backend estará rodando em [http://localhost:3001](http://localhost:3001).
+
+2. **Inicie o frontend:**
+
+   No diretório `frontend`, execute o comando:
+
+   ```bash
+   npm run dev
+   ```
+
+   O frontend estará rodando em [http://localhost:3000](http://localhost:3000).
+
+## Endpoints da API
+
+### Base URL: `http://localhost:3001`
+
+- **GET /users**: Lista todos os usuários com paginação e filtros opcionais.
+- **POST /users**: Cria um novo usuário.
+- **PUT /users/:id**: Atualiza um usuário existente.
+- **DELETE /users/:id**: Remove um usuário existente.
+
+### Parâmetros de Filtros
+
+Os seguintes parâmetros podem ser usados para filtrar usuários no endpoint `GET /users`:
+
+- **page**: Número da página para paginação (opcional).
+- **search**: Pesquisa por nome ou email (opcional).
+- **profile**: Filtra por tipo de perfil de usuário (opcional).
+
+## Tecnologias Utilizadas
+
+### Frontend
+
+- **NextJS**
+- **React**
+- **Axios**
+- **React Toastify**
+- **Tailwind CSS**
+
+### Backend
+
+- **Node.js** com **Express**
+- **SQLite** como banco de dados
+- **TypeScript** para tipagem estática
