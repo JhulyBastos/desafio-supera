@@ -2,6 +2,11 @@
 
 Este projeto é uma aplicação CRUD (Create, Read, Update, Delete) para gerenciar usuários. A aplicação permite criar, listar, editar e remover usuários, com um frontend desenvolvido em React e um backend em Node.js usando SQLite. O projeto foi desenvolvido para o desafio técnico da empresa Supera.
 
+<img src="./home.jpg" alt="Home" width="500"/>
+<img src="./criar-usuario.jpg" alt="Criar" width="500"/>
+<img src="./editar-usuario.jpg" alt="Editar" width="500"/>
+<img src="./deletar-usuario.jpg" alt="Deletar" width="500"/>
+
 ## Instalação
 
 1. **Clone o repositório:**
